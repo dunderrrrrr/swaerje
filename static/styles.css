@@ -1,0 +1,14 @@
+body {
+    text-align: center;
+    background-color: #aad3df;
+}
+#map {
+    width: 80%;
+    height: 100vh;
+    margin: 0 auto;
+}
+.county-name {
+    background-color: #000;
+    color:#FFF;
+    padding:5px;
+}
