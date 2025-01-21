@@ -23,4 +23,8 @@
       };
     };
   };
+
+  scripts.run-server.exec = ''
+    python run.py
+  '';
 }

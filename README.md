@@ -6,4 +6,4 @@
 
 `devenv` sköter allting som har med dependencies att göra.
 
-Starta servern med `python run.py`.
+Starta servern med `run-server`.
