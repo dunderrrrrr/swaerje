@@ -65,15 +65,25 @@ def index():
                 h.script(src=url_for("static", filename="notify.js")),
             ],
             h.body[
-                h.h1[
-                    "Klicka på: ",
-                    h.span(
-                        hx_get=url_for("target"),
-                        hx_trigger="load, setNewTarget from:body",
-                    ),
+                h.header[
+                    h.h1[
+                        "Klicka på: ",
+                        h.span(
+                            hx_get=url_for("target"),
+                            hx_trigger="load, setNewTarget from:body",
+                        ),
+                    ]
                 ],
-                h.span(".result"),
+                h.div(".statistics")[
+                    h.ul(".stats")[
+                        # placeholders
+                        h.li["Antal försök: 10"],
+                        h.li["Antal fel: 5"],
+                        h.li["Ratio: 1.05"],
+                    ],
+                ],
                 h.div("#map"),
+                h.span(".notifier"),
                 h.script(src="https://unpkg.com/leaflet/dist/leaflet.js"),
                 h.script(src=url_for("static", filename="map.js")),
             ],

@@ -1,9 +1,15 @@
 body {
     text-align: center;
     background-color: #aad3df;
+    overflow: hidden;
+}
+header {
+    position: sticky;
+    top:0;
 }
 #map {
-    width: 80%;
+    position:fixed;
+    width: 100%;
     height: 100vh;
     margin: 0 auto;
 }
@@ -11,4 +17,7 @@ body {
     background-color: #000;
     color:#FFF;
     padding:5px;
+}
+li {
+    display:inline-block;
 }

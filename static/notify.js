@@ -194,7 +194,7 @@
 		arrowSize: 5,
 		breakNewLines: true,
 		elementPosition: "bottom",
-		globalPosition: "top right",
+		globalPosition: "bottom right",
 		style: "bootstrap",
 		className: "error",
 		showAnimation: "slideDown",

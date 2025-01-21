@@ -25,7 +25,7 @@ fetch('https://raw.githubusercontent.com/dunderrrrrr/sweden-counties/refs/heads/
 
                 layer.on('click', function () {
                     htmx.ajax("POST", "/target/verify", {
-                        target: '.result',
+                        target: '.notifier',
                         swap: 'innerHTML',
                         headers: { 'Content-Type': 'application/json' },
                         values: {
