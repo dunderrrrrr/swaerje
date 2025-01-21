@@ -16,12 +16,11 @@ fetch('https://raw.githubusercontent.com/dunderrrrrr/sweden-counties/refs/heads/
             },
             onEachFeature: function (feature, layer) {
                 layer.on('mouseover', function () {
-                    layer.setStyle({ fillColor: 'yellow', fillOpacity: 0.8 });
+                    layer.setStyle({ fillColor: 'yellow', fillOpacity: 0.4 });
                 });
                 layer.on('mouseout', function () {
                     layer.setStyle({  fillOpacity: 0.0 });
                 });
-                layer.bindTooltip(feature.properties.name);
 
                 layer.on('click', function () {
                     htmx.ajax("POST", "/target/verify", {
