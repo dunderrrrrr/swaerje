@@ -3,6 +3,7 @@ import random
 import htpy as h
 from flask import Flask, url_for, Response, request
 import urllib
+from components import header_html
 from constants import COUNTIES, COUNTIES_DICT_BY_REAL_NAME
 
 app = Flask(
@@ -12,7 +13,7 @@ app = Flask(
 )
 
 
-def _parse_data(data) -> str:
+def _parse_data() -> str:
     decoded_data = urllib.parse.unquote(request.data.decode())
     parsed_data = urllib.parse.parse_qs(decoded_data)
     return json.loads(parsed_data["data"][0])
@@ -26,7 +27,7 @@ def target():
 
 @app.route("/target/verify", methods=["POST"])
 def verify_target():
-    data = _parse_data(request.data)
+    data = _parse_data()
 
     selected_county = data["selected_county"]
     current_target = data["current_target"]
@@ -34,11 +35,23 @@ def verify_target():
 
     if selected_target != current_target:
         return Response(
-            h.span({"x-init": f'$.notify("{selected_county} är fel!", "error")'}),
+            h.span(
+                {
+                    "x-init": f'$.notify("{selected_county} är fel!", "error");'
+                    "statWrong++;"
+                    "statTries++"
+                }
+            ),
         )
 
     return Response(
-        h.span({"x-init": f'$.notify("{selected_county} är rätt!", "success")'}),
+        h.span(
+            {
+                "x-init": f'$.notify("{selected_county} är rätt!", "success");'
+                "statCorrect++;"
+                "statTries++"
+            }
+        ),
         headers={"HX-Trigger": "setNewTarget"},
     )
 
@@ -47,47 +60,36 @@ def verify_target():
 def index():
     return Response(
         h.html(lang="en")[
-            h.head[
-                h.meta(charset="UTF-8"),
-                h.meta(
-                    name="viewport", content="width=device-width, initial-scale=1.0"
-                ),
-                h.title["🇸🇪 Swärje 🇸🇪 "],
-                h.link(
-                    rel="stylesheet", href="https://unpkg.com/leaflet/dist/leaflet.css"
-                ),
-                h.link(rel="stylesheet", href=url_for("static", filename="styles.css")),
-                h.script(src="https://unpkg.com/htmx.org@2.0.4"),
-                h.script(
-                    src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"
-                ),
-                h.script(src="https://unpkg.com/alpinejs", defer=""),
-                h.script(src=url_for("static", filename="notify.js")),
-            ],
-            h.body[
+            header_html(),
+            h.body(
+                x_data="{statTries: 0, statWrong: 0, statCorrect: 0, statRatio: 0.00}"
+            )[
                 h.header[
-                    h.h1[
+                    h.h2[
                         "Klicka på: ",
                         h.span(
                             hx_get=url_for("target"),
                             hx_trigger="load, setNewTarget from:body",
                         ),
-                    ]
-                ],
-                h.div(".statistics")[
-                    h.ul(".stats")[
-                        # placeholders
-                        h.li["Antal försök: 10"],
-                        h.li["Antal fel: 5"],
-                        h.li["Ratio: 1.05"],
+                    ],
+                    h.div(".statistics")[
+                        h.div[f"Försök: ", h.span(x_text="statTries")],
+                        h.div["Rätt: ", h.span(x_text="statCorrect")],
+                        h.div["Fel: ", h.span(x_text="statWrong")],
+                        h.div[
+                            "Ratio: ",
+                            h.span(
+                                x_text="statCorrect > 0 ? (statCorrect / statTries).toFixed(2): 0"
+                            ),
+                        ],
                     ],
                 ],
-                h.div("#map"),
-                h.span(".notifier"),
-                h.script(src="https://unpkg.com/leaflet/dist/leaflet.js"),
-                h.script(src=url_for("static", filename="map.js")),
             ],
-        ]
+            h.div("#map"),
+            h.span(".notifier"),
+            h.script(src="https://unpkg.com/leaflet/dist/leaflet.js"),
+            h.script(src=url_for("static", filename="map.js")),
+        ],
     )
 
 

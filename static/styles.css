@@ -7,17 +7,25 @@ header {
     position: sticky;
     top:0;
 }
+h2 {
+    margin-bottom: 8px;
+}
 #map {
     position:fixed;
     width: 100%;
     height: 100vh;
-    margin: 0 auto;
+    left:0;
+    right:0;
 }
 .county-name {
     background-color: #000;
     color:#FFF;
     padding:5px;
 }
-li {
-    display:inline-block;
+.statistics {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: 15px;
 }
