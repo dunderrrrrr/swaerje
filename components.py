@@ -24,20 +24,21 @@ def header_html() -> h.Element:
     ]
 
 
+def calc_ratio() -> h.Element:
+    return h.span(
+        x_text="statCorrect > 0 ? `${(statCorrect / statTries * 100).toFixed(0)}%`: '0%'"
+    )
+
+
 def finished_dialog_html() -> h.Element:
     return h.sl_dialog(".finished-dialog", no_header="", open="")[
-        "Du klarade det!",
+        "Statistik",
         h.ul(".stats-ul")[
+            h.li[calc_ratio(), " rätt!"],
             h.li["Antal rätt: ", h.span(x_text="statCorrect")],
             h.li["Antal fel: ", h.span(x_text="statWrong")],
-            h.li[
-                "Ratio: ",
-                h.span(
-                    x_text="statCorrect > 0 ? (statCorrect / statTries).toFixed(2): 0"
-                ),
-            ],
         ],
         h.sl_button(
             {"@click": "window.location.reload()"}, slot="footer", variant="primary"
-        )["Försök igen"],
+        )["Börja om"],
     ]

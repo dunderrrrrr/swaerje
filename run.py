@@ -3,7 +3,7 @@ import random
 import htpy as h
 from flask import Flask, url_for, Response, request
 import urllib
-from components import finished_dialog_html, header_html
+from components import calc_ratio, finished_dialog_html, header_html
 from constants import COUNTIES, COUNTIES_DICT_BY_REAL_NAME
 
 app = Flask(
@@ -75,22 +75,18 @@ def index():
                     ],
                     h.div(".statistics")[
                         h.div[
-                            f"Försök: ", h.span(x_text="statTries"), "/", len(COUNTIES)
-                        ],
-                        h.div["Rätt: ", h.span(x_text="statCorrect")],
-                        h.div["Fel: ", h.span(x_text="statWrong")],
-                        h.div[
-                            "Ratio: ",
-                            h.span(
-                                x_text="statCorrect > 0 ? (statCorrect / statTries).toFixed(2): 0"
-                            ),
+                            h.span(x_text="statCorrect"),
+                            "/",
+                            h.span[len(COUNTIES)],
+                            h.span[" | "],
+                            calc_ratio(),
                         ],
                     ],
                 ],
             ],
-            h.div("#map", x_show=f"statTries != {len(COUNTIES)}"),
+            h.div("#map", x_show=f"statCorrect != {len(COUNTIES)}"),
             h.span(".notifier"),
-            h.div(x_show=f"statTries == {len(COUNTIES)}")[finished_dialog_html(),],
+            h.div(x_show=f"statCorrect == {len(COUNTIES)}")[finished_dialog_html()],
             h.script(src="https://unpkg.com/leaflet/dist/leaflet.js"),
             h.script(src=url_for("static", filename="map.js")),
         ],
