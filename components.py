@@ -43,10 +43,9 @@ def finished_dialog_html() -> h.Element:
         h.hr,
         h.p[ratio_html(), " rätt!"],
         h.ul(".stats-ul")[
-            h.li["Antal rätt: ", h.span(x_text="statCorrect")],
-            h.li["Antal fel: ", h.span(x_text="statWrong")],
+            h.li["Du svarade fel ", h.span(x_text="statWrong"), " gånger."],
         ],
-        h.p["Du klarade det på tiden: ", timer_html()],
+        h.p["Tid: ", timer_html()],
         h.sl_button(
             {"@click": "window.location.reload()"}, slot="footer", variant="primary"
         )["Börja om"],
