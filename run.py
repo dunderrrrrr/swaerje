@@ -3,7 +3,13 @@ import random
 import htpy as h
 from flask import Flask, url_for, Response, request
 import urllib
-from components import calc_ratio, finished_dialog_html, header_html
+from components import (
+    ratio_html,
+    finished_dialog_html,
+    header_html,
+    statistics_html,
+    timer_html,
+)
 from constants import COUNTIES, COUNTIES_DICT_BY_REAL_NAME
 
 app = Flask(
@@ -62,8 +68,20 @@ def index():
         h.html(lang="en")[
             header_html(),
             h.body(
-                {"@sl-request-close": "$event.preventDefault()"},
-                x_data="{statTries: 0, statWrong: 0, statCorrect: 0, statRatio: 0.00}",
+                {
+                    "x-init": "start = Date.now();stop = 0;interval = setInterval(() => { now = Date.now() }, 10)",
+                    "@sl-request-close": "$event.preventDefault()",
+                },
+                x_data="""{
+                    statTries: 0,
+                    statWrong: 0,
+                    statCorrect: 0,
+                    statRatio: 0.00,
+                    interval: 0,
+                    now: 0,
+                    start: 0,
+                    stop: 0
+                }""",
             )[
                 h.header[
                     h.h2[
@@ -73,20 +91,16 @@ def index():
                             hx_trigger="load, setNewTarget from:body",
                         ),
                     ],
-                    h.div(".statistics")[
-                        h.div[
-                            h.span(x_text="statCorrect"),
-                            "/",
-                            h.span[len(COUNTIES)],
-                            h.span[" | "],
-                            calc_ratio(),
-                        ],
-                    ],
+                    statistics_html(),
                 ],
             ],
             h.div("#map", x_show=f"statCorrect != {len(COUNTIES)}"),
             h.span(".notifier"),
-            h.div(x_show=f"statCorrect == {len(COUNTIES)}")[finished_dialog_html()],
+            h.div(
+                x_show=f"statCorrect == {len(COUNTIES)}",
+                x_effect="if (%s) { clearInterval(interval);stop = Date.now();interval = 0;now = 0; }"
+                % f"statCorrect == {len(COUNTIES)}",
+            )[finished_dialog_html()],
             h.script(src="https://unpkg.com/leaflet/dist/leaflet.js"),
             h.script(src=url_for("static", filename="map.js")),
         ],
