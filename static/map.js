@@ -2,7 +2,7 @@ var map = L.map('map').setView([63, 15], 6);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-fetch('https://raw.githubusercontent.com/dunderrrrrr/sweden-counties/refs/heads/main/sweden-counties.geojson')
+fetch('sweden-counties.geojson')
     .then(response => response.json())
     .then(data => {
         L.geoJSON(data, {
