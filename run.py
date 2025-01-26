@@ -84,12 +84,12 @@ def index():
                 }""",
             )[
                 h.header[
-                    h.h2[
-                        "Klicka på: ",
+                    h.p(".click")["Klicka på rätt län på kartan!"],
+                    h.h3[
                         h.span(
                             hx_get=url_for("target"),
                             hx_trigger="load, setNewTarget from:body",
-                        ),
+                        )[h.span(".county-name")["Laddar..."]],
                     ],
                     statistics_html(),
                 ],
