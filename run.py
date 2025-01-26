@@ -27,6 +27,7 @@ def _parse_data() -> str:
 
 @app.route("/target")
 def target():
+    random.shuffle(COUNTIES)
     random_county = random.choice(COUNTIES)
     return Response(random_county.html)
 
