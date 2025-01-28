@@ -3,13 +3,7 @@ import random
 import htpy as h
 from flask import Flask, url_for, Response, request
 import urllib
-from components import (
-    ratio_html,
-    finished_dialog_html,
-    header_html,
-    statistics_html,
-    timer_html,
-)
+from components import finished_dialog_html, header_html, statistics_html
 from constants import COUNTIES, COUNTIES_DICT_BY_REAL_NAME
 
 app = Flask(
@@ -25,11 +19,18 @@ def _parse_data() -> str:
     return json.loads(parsed_data["data"][0])
 
 
-@app.route("/target")
+@app.route("/target", methods=["GET"])
 def target():
-    random.shuffle(COUNTIES)
-    random_county = random.choice(COUNTIES)
-    return Response(random_county.html)
+    completed = request.cookies.getlist("completed")
+    if not completed:
+        random_county = random.choice(COUNTIES)
+        return Response(random_county.html)
+
+    completed = completed[0].split(",")
+    while True:
+        random_county = random.choice(COUNTIES)
+        if random_county.name not in completed:
+            return Response(random_county.html)
 
 
 @app.route("/target/verify", methods=["POST"])
@@ -51,7 +52,7 @@ def verify_target():
             ),
         )
 
-    return Response(
+    response = Response(
         h.span(
             {
                 "x-init": f'$.notify("{selected_county} är rätt!", "success");'
@@ -62,10 +63,15 @@ def verify_target():
         headers={"HX-Trigger": "setNewTarget"},
     )
 
+    existing_completed = request.cookies.getlist("completed")
+    existing_completed.append(current_target)
+    response.set_cookie("completed", ",".join(existing_completed))
+    return response
+
 
 @app.route("/")
 def index():
-    return Response(
+    response = Response(
         h.html(lang="en")[
             header_html(),
             h.body(
@@ -106,6 +112,8 @@ def index():
             h.script(src=url_for("static", filename="map.js")),
         ],
     )
+    response.set_cookie("completed", "")
+    return response
 
 
 if __name__ == "__main__":
