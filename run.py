@@ -1,16 +1,18 @@
+import os
 import json
 import random
 import htpy as h
-from flask import Flask, url_for, Response, request
+import sentry_sdk
 import urllib
-from components import finished_dialog_html, header_html, statistics_html
+from dotenv import load_dotenv
+from flask import Flask, url_for, Response, request
 from constants import COUNTIES, COUNTIES_DICT_BY_REAL_NAME
+from components import finished_dialog_html, header_html, statistics_html
 
-app = Flask(
-    __name__,
-    static_url_path="",
-    static_folder="static",
-)
+load_dotenv()
+sentry_sdk.init(dsn=os.getenv("SENTRY_DSN"), send_default_pii=True)
+
+app = Flask(__name__, static_url_path="", static_folder="static")
 
 
 def _parse_data() -> str:

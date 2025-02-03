@@ -10,6 +10,8 @@
     pkgs.alejandra
   ];
 
+  dotenv.enable = true;
+
   languages = {
     python = {
       enable = true;
