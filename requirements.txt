@@ -12,7 +12,7 @@ flask==3.1.3
     # via
     #   svaerje (pyproject.toml)
     #   sentry-sdk
-gunicorn==25.3.0
+gunicorn==26.0.0
     # via svaerje (pyproject.toml)
 htpy==25.12.0
     # via svaerje (pyproject.toml)
@@ -31,7 +31,7 @@ packaging==26.2
     # via gunicorn
 python-dotenv==1.2.2
     # via svaerje (pyproject.toml)
-sentry-sdk==2.59.0
+sentry-sdk==2.60.0
     # via svaerje (pyproject.toml)
 typing-extensions==4.15.0
     # via htpy
